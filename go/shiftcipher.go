@@ -16,7 +16,7 @@ func main() {
 	for i := 0; i < MAXLEN; i++ {
 		lower[i] = rune('a' + i)
 	}
-	// populate upper arry
+	// populate upper array
 	for i := 0; i < MAXLEN; i++ {
 		upper[i] = rune('A' + i)
 	}
@@ -30,10 +30,10 @@ func main() {
 func encodeChar(input rune, shift int) rune {
 	if input >= 'a' && input <= 'z' {
 		// grab the index of input
-		encChar := lower[(index(input, lower)+shift)%MAXLEN]
+		encChar := lower[(index(input, &lower)+shift)%MAXLEN]
 		return encChar
 	} else if input >= 'A' && input <= 'Z' {
-		encChar := upper[(index(input, upper)+shift)%MAXLEN]
+		encChar := upper[(index(input, &upper)+shift)%MAXLEN]
 		return encChar
 	} else {
 		// not a letter - dont shift
@@ -41,7 +41,7 @@ func encodeChar(input rune, shift int) rune {
 	}
 }
 
-func index(char rune, arr [MAXLEN]rune) int {
+func index(char rune, arr *[MAXLEN]rune) int {
 	for ind, val := range arr {
 		if char == val {
 			return ind
