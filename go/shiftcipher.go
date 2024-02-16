@@ -4,41 +4,59 @@ import "fmt"
 
 const MAXLEN int = 26
 
-var lower [MAXLEN]rune
-var upper [MAXLEN]rune
-
-func main() {
-	input := "Hello World!"
-	shift := -1
-	var outarr []rune
-
-	// populate lower array
-	for i := 0; i < MAXLEN; i++ {
-		lower[i] = rune('a' + i)
-	}
-	// populate upper array
-	for i := 0; i < MAXLEN; i++ {
-		upper[i] = rune('A' + i)
-	}
-
-	for _, char := range input {
-		outarr = append(outarr, encodeChar(char, shift))
-	}
-	fmt.Println(string(outarr))
+type RingBuffer struct {
+	lower [MAXLEN]rune
+	upper [MAXLEN]rune
 }
 
-func encodeChar(input rune, shift int) rune {
+func main() {
+	input := "Attack the north wall"
+	shift := -512
+	var ciphertext string
+	var rb RingBuffer
+	rb = populate(rb)
+
+	for _, char := range input {
+		ciphertext += string(encodeChar(char, shift, rb))
+	}
+
+	fmt.Println(ciphertext)
+}
+
+func populate(rb RingBuffer) RingBuffer {
+	for i := 0; i < MAXLEN; i++ {
+		rb.lower[i] = rune('a' + i)
+	}
+
+	for i := 0; i < MAXLEN; i++ {
+		rb.upper[i] = rune('A' + i)
+	}
+
+	return RingBuffer{
+		lower: rb.lower,
+		upper: rb.upper,
+	}
+}
+
+func encodeChar(input rune, shift int, rb RingBuffer) rune {
+	var buff [MAXLEN]rune
 	if input >= 'a' && input <= 'z' {
-		// grab the index of input
-		encChar := lower[(index(input, &lower)+shift)%MAXLEN]
-		return encChar
+		buff = rb.lower
 	} else if input >= 'A' && input <= 'Z' {
-		encChar := upper[(index(input, &upper)+shift)%MAXLEN]
-		return encChar
+		buff = rb.upper
 	} else {
 		// not a letter - dont shift
 		return input
 	}
+
+	getInd := index(input, &buff)
+
+	getShift := (getInd + shift) % MAXLEN
+	if getShift < 0 {
+		getShift = getShift + MAXLEN
+	}
+
+	return buff[getShift]
 }
 
 func index(char rune, arr *[MAXLEN]rune) int {
