@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+	"strconv"
+)
 
 const MAXLEN int = 26
 
@@ -10,8 +14,20 @@ type RingBuffer struct {
 }
 
 func main() {
-	input := "Attack the north wall"
-	shift := -512
+	input := "akalibardzyratrundle"
+	shift := 7
+	if len(os.Args) < 2 {
+		fmt.Println("using default values!")
+	} else {
+		input = os.Args[1]
+		shift_64, err := strconv.ParseInt(os.Args[2], 10, 32)
+		shift = int(shift_64)
+
+		if err != nil {
+			fmt.Println("Something bad happened")
+			os.Exit(1)
+		}
+	}
 	var ciphertext string
 	var rb RingBuffer
 	rb = populate(rb)
