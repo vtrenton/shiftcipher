@@ -14,7 +14,7 @@ type RingBuffer struct {
 }
 
 func main() {
-	input := "akalibardzyratrundle"
+	input := "Attack the north wall!"
 	shift := 7
 	if len(os.Args) < 2 {
 		fmt.Println("using default values!")
