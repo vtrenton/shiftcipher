@@ -14,19 +14,22 @@ type RingBuffer struct {
 }
 
 func main() {
-	input := "Attack the north wall!"
-	shift := 7
-	if len(os.Args) < 2 {
-		fmt.Println("using default values!")
-	} else {
+	var input string
+	var shift int
+	if len(os.Args) == 3 {
 		input = os.Args[1]
+
 		shift_64, err := strconv.ParseInt(os.Args[2], 10, 32)
 		shift = int(shift_64)
-
+		// shits gonna crash if you try to strconv anything but an int
+		// but go is pretty memory safe and this should catch it.
 		if err != nil {
 			fmt.Println("Something bad happened")
 			os.Exit(1)
 		}
+	} else {
+		input = "ya goofd - enter 1. a string to shift and 2. number to shift by"
+		shift = 0
 	}
 	var ciphertext string
 	var rb RingBuffer
