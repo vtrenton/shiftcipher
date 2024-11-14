@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 )
@@ -13,36 +14,7 @@ type RingBuffer struct {
 	upper [MAXLEN]rune
 }
 
-func main() {
-	var input string
-	var shift int
-	if len(os.Args) == 3 {
-		input = os.Args[1]
-
-		shift_64, err := strconv.ParseInt(os.Args[2], 10, 32)
-		shift = int(shift_64)
-		// shits gonna crash if you try to strconv anything but an int
-		// but go is pretty memory safe and this should catch it.
-		if err != nil {
-			fmt.Println("Something bad happened")
-			os.Exit(1)
-		}
-	} else {
-		input = "ya goofd - enter 1. a string to shift and 2. number to shift by"
-		shift = 0
-	}
-	var ciphertext string
-	var rb RingBuffer
-	rb = populate(rb)
-
-	for _, char := range input {
-		ciphertext += string(encodeChar(char, shift, rb))
-	}
-
-	fmt.Println(ciphertext)
-}
-
-func populate(rb RingBuffer) RingBuffer {
+func (rb *RingBuffer) populate() {
 	for i := 0; i < MAXLEN; i++ {
 		rb.lower[i] = rune('a' + i)
 	}
@@ -50,11 +22,34 @@ func populate(rb RingBuffer) RingBuffer {
 	for i := 0; i < MAXLEN; i++ {
 		rb.upper[i] = rune('A' + i)
 	}
+}
 
-	return RingBuffer{
-		lower: rb.lower,
-		upper: rb.upper,
+func main() {
+
+	var input string
+	var shift int
+	var ciphertext string
+	var rb RingBuffer
+
+	if len(os.Args) == 3 {
+		input = os.Args[1]
+		shift_64, err := strconv.ParseInt(os.Args[2], 10, 32)
+		if err != nil {
+			fmt.Println("Something bad happened")
+			os.Exit(1)
+		}
+		shift = int(shift_64)
+	} else {
+		log.Fatal("ya goofd - enter 1. a string to shift and 2. number to shift by")
 	}
+
+	rb.populate()
+
+	for _, char := range input {
+		ciphertext += string(encodeChar(char, shift, rb))
+	}
+
+	fmt.Println(ciphertext)
 }
 
 func encodeChar(input rune, shift int, rb RingBuffer) rune {
