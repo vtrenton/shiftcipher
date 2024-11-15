@@ -35,8 +35,7 @@ func main() {
 		input = os.Args[1]
 		shift_64, err := strconv.ParseInt(os.Args[2], 10, 32)
 		if err != nil {
-			fmt.Println("Something bad happened")
-			os.Exit(1)
+			log.Fatalf("Something bad happened")
 		}
 		shift = int(shift_64)
 	} else {
@@ -79,8 +78,6 @@ func index(char rune, arr *[MAXLEN]rune) int {
 			return ind
 		}
 	}
-	// we should never reach this
-	// because we validated in the calling func
-	// but go doesn't know that
-	return -1
+	log.Fatalf("Character %c not found in array - this should be impossible", char)
+	return -1 // never reached, just to satisfy compiler
 }
