@@ -39,7 +39,8 @@ func main() {
 		}
 		shift = int(shift_64)
 	} else {
-		log.Fatal("ya goofd - enter 1. a string to shift and 2. number to shift by")
+		fmt.Fprintln(os.Stderr, "ya goofd - enter 1. a string to shift and 2. number to shift by")
+		os.Exit(1)
 	}
 
 	rb.populate()
