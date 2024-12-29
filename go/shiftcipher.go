@@ -26,18 +26,20 @@ func (rb *RingBuffer) populate() {
 
 func main() {
 
-	var input string
-	var shift int
-	var ciphertext string
-	var rb RingBuffer
+	var (
+		input      string
+		shift      int
+		ciphertext string
+		rb         RingBuffer
+		err        error
+	)
 
 	if len(os.Args) == 3 {
 		input = os.Args[1]
-		shift_64, err := strconv.ParseInt(os.Args[2], 10, 32)
+		shift, err = strconv.Atoi(os.Args[2])
 		if err != nil {
-			log.Fatalf("Something bad happened")
+			log.Fatalf("argument provided was not a valid 32bit number")
 		}
-		shift = int(shift_64)
 	} else {
 		fmt.Fprintln(os.Stderr, "ya goofd - enter 1. a string to shift and 2. number to shift by")
 		os.Exit(1)
